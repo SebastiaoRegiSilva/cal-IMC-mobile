@@ -89,38 +89,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       labelText: "Digite o altura",
                     )),
               ),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.fromLTRB(20, 0, 5, 20),
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      primary: Colors.black,
-                      padding: EdgeInsets.all(20.0),
-                      textStyle: TextStyle(fontSize: 17),
-                    ),
-                    onPressed: () {
-                      _calcular();
-                    },
-                    child: Text('Calcular IMC'),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(5, 0, 20, 20),
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      primary: Colors.black,
-                      padding: EdgeInsets.all(20.0),
-                      textStyle: TextStyle(fontSize: 17),
-                    ),
-                    onPressed: () {
-                      _limpar();
-                    },
-                    child: Text("Limpar tudo"),
-                  ),
-                ),
-              ]),
               Padding(
                 padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
                 child: TextField(
@@ -153,6 +121,38 @@ class _MyHomePageState extends State<MyHomePage> {
                       labelText: "Resultado",
                     )),
               ),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.fromLTRB(20, 0, 5, 20),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      primary: Colors.black,
+                      padding: EdgeInsets.all(20.0),
+                      textStyle: TextStyle(fontSize: 17),
+                    ),
+                    onPressed: () {
+                      _calcular();
+                    },
+                    child: Text('Calcular IMC'),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(5, 0, 20, 20),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      primary: Colors.black,
+                      padding: EdgeInsets.all(20.0),
+                      textStyle: TextStyle(fontSize: 17),
+                    ),
+                    onPressed: () {
+                      _limpar();
+                    },
+                    child: Text("Limpar tudo"),
+                  ),
+                ),
+              ]),
             ],
           ),
         ),
