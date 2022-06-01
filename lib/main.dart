@@ -30,7 +30,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   TextEditingController _peso = TextEditingController();
   TextEditingController _altura = TextEditingController();
-  String _resultado;
+  TextEditingController _resultado = TextEditingController();
 
   void calcImc() {
     double peso = double.parse(_peso.text);
@@ -38,16 +38,16 @@ class _MyHomePageState extends State<MyHomePage> {
     double imc = peso / (altura * altura);
 
     setState(() {
-      _resultado = "IMC = ${imc.toStringAsPrecision(2)}\n";
+      _resultado.text = "IMC = ${imc.toStringAsPrecision(2)}\n";
       // Depois substituir por um switch case.
       if (imc < 18.5)
-        _resultado += "Abaixo do peso ideal.";
+        _resultado.text += "Abaixo do peso ideal.";
       else if (imc < 25.0)
-        _resultado += "Peso ideal.";
+        _resultado.text += "Peso ideal.";
       else if (imc < 30.0)
-        _resultado += "Acima do peso ideal.";
+        _resultado.text += "Acima do peso ideal.";
       else
-        _resultado += "Obeso.";
+        _resultado.text += "Obeso.";
     });
   }
 
@@ -56,7 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _peso.text = "";
       _altura.text = "";
 
-      _resultado = 'Informe seus dados!';
+      _resultado.text = 'Informe seus dados!';
     });
   }
 
