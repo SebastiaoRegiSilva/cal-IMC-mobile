@@ -70,19 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Padding(
                 padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
                 child: TextField(
-                    maxLength: 8,
                     controller: _altura,
-                    // Conforme inserção do cep, os campos subsequentes serão automaticamente preeenchidos.
-                    onChanged: (inputValue) {
-                      validator:
-                      (value) {
-                        if (value.isEmpty) {
-                          return 'Informe altura válida!';
-                        }
-                      };
-
-                      double? altura = double.tryParse(_altura.text);
-                    },
                     decoration: InputDecoration(
                       icon: Icon(Icons.add_location_alt_rounded),
                       border: OutlineInputBorder(),
@@ -92,17 +80,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Padding(
                 padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
                 child: TextField(
-                    maxLength: 11,
                     controller: _peso,
-                    // Conforme a renda mensal for mudando o limite de crédito(30%) acompanha.
-                    onChanged: (inputValue) {
-                      var altura = double.tryParse(_altura.text);
-                      var peso = double.tryParse(_peso.text);
-
-                      var resultado = peso;
-
-                      if (resultado != null) _resultado.text = resultado.toString();
-                    },
                     decoration: InputDecoration(
                       icon: Icon(Icons.access_alarms_outlined),
                       border: OutlineInputBorder(),
