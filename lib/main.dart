@@ -1,142 +1,127 @@
 import 'package:flutter/material.dart';
-import 'dart:convert';
 
-void main() => runApp(MyApp());
+void main() => runApp(
+      MaterialApp(
+        home: Home(),
+        debugShowCheckedModeBanner: false,
+      ),
+    );
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  TextEditingController _weightController = TextEditingController();
+  TextEditingController _heightController = TextEditingController();
+  String _result;
+
+  @override
+  void initState() {
+    super.initState();
+    resetFields();
+  }
+
+  void resetFields() {
+    _weightController.text = '';
+    _heightController.text = '';
+    setState(() {
+      _result = 'Informe seus dados';
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      // Application name
-      title: 'Flutter Stateful Clicker Counter',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Cálculo de IMC.'),
+    return Scaffold(appBar: buildAppBar(), backgroundColor: Colors.white, body: SingleChildScrollView(padding: EdgeInsets.all(20.0), child: buildForm()));
+  }
+
+  AppBar buildAppBar() {
+    return AppBar(
+      title: Text('Calculadora de IMC'),
+      backgroundColor: Colors.blue,
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.refresh),
+          onPressed: () {
+            resetFields();
+          },
+        )
+      ],
     );
   }
-}
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  Form buildForm() {
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          buildTextFormField(label: "Peso (kg)", error: "Insira seu peso!", controller: _weightController),
+          buildTextFormField(label: "Altura (cm)", error: "Insira uma altura!", controller: _heightController),
+          buildTextResult(),
+          buildCalculateButton(),
+        ],
+      ),
+    );
+  }
 
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  TextEditingController _peso = TextEditingController();
-  TextEditingController _altura = TextEditingController();
-  TextEditingController _resultado = TextEditingController();
-
-  void calcImc() {
-    double peso = double.parse(_peso.text);
-    double altura = double.parse(_altura.text) / 100.0;
-    double imc = peso / (altura * altura);
+  void calculateImc() {
+    double weight = double.parse(_weightController.text);
+    double height = double.parse(_heightController.text) / 100.0;
+    double imc = weight / (height * height);
 
     setState(() {
-      _resultado.text = "IMC = ${imc.toStringAsPrecision(2)}\n";
-      // Depois substituir por um switch case.
-      if (imc < 18.5)
-        _resultado.text += "Abaixo do peso ideal.";
+      _result = "IMC = ${imc.toStringAsPrecision(2)}\n";
+      if (imc < 18.6)
+        _result += "Abaixo do peso";
       else if (imc < 25.0)
-        _resultado.text += "Peso ideal.";
+        _result += "Peso ideal";
       else if (imc < 30.0)
-        _resultado.text += "Acima do peso ideal.";
+        _result += "Levemente acima do peso";
+      else if (imc < 35.0)
+        _result += "Obesidade Grau I";
+      else if (imc < 40.0)
+        _result += "Obesidade Grau II";
       else
-        _resultado.text += "Obeso.";
+        _result += "Obesidade Grau IIII";
     });
   }
 
-  void _limpar() {
-    setState(() {
-      _peso.text = "";
-      _altura.text = "";
-
-      _resultado.text = 'Informe seus dados!';
-    });
+  Widget buildCalculateButton() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 36.0),
+      child: RaisedButton(
+        onPressed: () {
+          if (_formKey.currentState.validate()) {
+            calculateImc();
+          }
+        },
+        child: Text('CALCULAR', style: TextStyle(color: Colors.white)),
+      ),
+    );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Center(child: Text(widget.title)),
+  Widget buildTextResult() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 36.0),
+      child: Text(
+        _result,
+        textAlign: TextAlign.center,
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: TextField(
-                    controller: _altura,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.add_location_alt_rounded),
-                      border: OutlineInputBorder(),
-                      labelText: "Digite o altura",
-                    )),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: TextField(
-                    controller: _peso,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.access_alarms_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: "Digite o peso",
-                    )),
-              ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                child: TextField(
-                    maxLength: 11,
-                    enabled: false,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.question_answer),
-                      border: OutlineInputBorder(),
-                      labelText: "Resultado",
-                    )),
-              ),
-              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.fromLTRB(20, 0, 5, 20),
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      primary: Colors.black,
-                      padding: EdgeInsets.all(20.0),
-                      textStyle: TextStyle(fontSize: 17),
-                    ),
-                    onPressed: () {
-                      calcImc();
-                    },
-                    child: Text('Calcular IMC'),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(5, 0, 20, 20),
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      primary: Colors.black,
-                      padding: EdgeInsets.all(20.0),
-                      textStyle: TextStyle(fontSize: 17),
-                    ),
-                    onPressed: () {
-                      _limpar();
-                    },
-                    child: Text("Limpar tudo"),
-                  ),
-                ),
-              ]),
-            ],
-          ),
-        ),
-      ),
+    );
+  }
+
+  Widget buildTextFormField({TextEditingController controller, String error, String label}) {
+    return TextFormField(
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(labelText: label),
+      controller: controller,
+      validator: (text) {
+        return text.isEmpty ? error : null;
+      },
     );
   }
 }
