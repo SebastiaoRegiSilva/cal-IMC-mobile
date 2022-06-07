@@ -19,7 +19,7 @@ class _HomeState extends State<Home> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String _info = "Informe os dados necessários";
-  void _limpar() {
+  void _limparConteudo() {
     controllerAltura.text = "";
     controllerPeso.text = "";
     setState(() {
@@ -58,7 +58,7 @@ class _HomeState extends State<Home> {
         }
       } else {
         _info = erro;
-        _limpar();
+        _limparConteudo();
       }
     });
   }
@@ -72,10 +72,17 @@ class _HomeState extends State<Home> {
             style: TextStyle(fontFamily: "Segoe UI"),
           ),
           centerTitle: true,
-          backgroundColor: Colors.green,
+          backgroundColor: Colors.blue,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.refresh),
+              onPressed: _limparConteudo,
+            )
+          ],
         ),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
+            // para a tela rolar
             padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
             child: Form(
               key: _formKey,
@@ -85,19 +92,19 @@ class _HomeState extends State<Home> {
                   Icon(
                     Icons.person,
                     size: 120.0,
-                    color: Colors.green,
+                    color: Colors.blue,
                   ),
                   TextFormField(
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                         labelText: "Peso (Kg)",
                         labelStyle: TextStyle(
-                          color: Colors.green,
+                          color: Colors.blue,
                           fontFamily: "Segoe UI",
                         )),
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Colors.green,
+                      color: Colors.blue,
                       fontSize: 25.0,
                       fontFamily: "Segoe UI",
                     ),
@@ -111,12 +118,12 @@ class _HomeState extends State<Home> {
                       decoration: InputDecoration(
                         labelText: "Altura (cm)",
                         labelStyle: TextStyle(
-                          color: Colors.green,
+                          color: Colors.blue,
                           fontFamily: "Segoe UI",
                         ),
                       ),
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.green, fontSize: 25.0, fontFamily: "Segoe UI"),
+                      style: TextStyle(color: Colors.blue, fontSize: 25.0, fontFamily: "Segoe UI"),
                       controller: controllerAltura,
                       validator: (value) {
                         return "Insira sua Altura!";
@@ -129,7 +136,7 @@ class _HomeState extends State<Home> {
                         onPressed: () {
                           calcularImc();
                         },
-                        color: Colors.green,
+                        color: Colors.blue,
                         child: Text(
                           "Calcular",
                           style: TextStyle(
@@ -147,13 +154,13 @@ class _HomeState extends State<Home> {
                       height: 50.0,
                       child: RaisedButton(
                         onPressed: () {
-                          _limpar();
+                          _limparConteudo();
                         },
-                        color: Colors.green,
+                        color: Colors.blue,
                         child: Text(
                           "Limpar",
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Colors.red,
                             fontSize: 25.0,
                             fontFamily: "Segoe UI",
                           ),
@@ -164,7 +171,7 @@ class _HomeState extends State<Home> {
                   Text(_info,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.green,
+                        color: Colors.blue,
                         fontSize: 25.0,
                         fontFamily: "Segoe UI",
                       ))
