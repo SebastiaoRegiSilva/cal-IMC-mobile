@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(
-      MaterialApp(
-        home: Home(),
-        debugShowCheckedModeBanner: false,
-      ),
-    );
+void main() {
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: Home(),
+  ));
+}
 
 class Home extends StatefulWidget {
   @override
@@ -13,115 +13,135 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  TextEditingController controlarPeso = new TextEditingController();
+  TextEditingController controlarAltura = new TextEditingController();
+
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  TextEditingController _weightController = TextEditingController();
-  TextEditingController _heightController = TextEditingController();
-  String _result;
-
-  @override
-  void initState() {
-    super.initState();
-    resetFields();
+  String _info = "Informe seus dados";
+  void _resetFilds() {
+    controlarAltura.text = "";
+    controlarPeso.text = "";
+    setState(() {
+      _info = "Informe seus dados";
+    });
   }
 
-  void resetFields() {
-    _weightController.text = '';
-    _heightController.text = '';
+  void calculate() {
     setState(() {
-      _result = 'Informe seus dados';
+      double peso = double.parse(controlarPeso.text);
+      double altura = double.parse(controlarAltura.text) / 100;
+      double imc = peso / (altura * altura);
+      if (imc < 18.6) {
+        _info = "Abaixo do peso (${imc.toStringAsPrecision(4)})";
+      } else if (imc > 18.6 && imc < 24.9) {
+        _info = "Peso Ideal (${imc.toStringAsPrecision(4)})";
+      } else if (imc > 24.9 && imc < 29.9) {
+        _info = "Levemente Acima do Peso (${imc.toStringAsPrecision(4)})";
+      } else if (imc > 29.9 && imc < 34.9) {
+        _info = "Obesidade Grau I (${imc.toStringAsPrecision(4)})";
+      } else if (imc > 34.9 && imc < 39.9) {
+        _info = "Obesidade Grau II (${imc.toStringAsPrecision(4)})";
+      } else if (imc > 40) {
+        _info = "Obesidade Grau III (${imc.toStringAsPrecision(4)})";
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: buildAppBar(), backgroundColor: Colors.white, body: SingleChildScrollView(padding: EdgeInsets.all(20.0), child: buildForm()));
-  }
-
-  AppBar buildAppBar() {
-    return AppBar(
-      title: Text('Calculadora de IMC'),
-      backgroundColor: Colors.blue,
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.refresh),
-          onPressed: () {
-            resetFields();
-          },
-        )
-      ],
-    );
-  }
-
-  Form buildForm() {
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          buildTextFormField(label: "Peso (kg)", error: "Insira seu peso!", controller: _weightController),
-          buildTextFormField(label: "Altura (cm)", error: "Insira uma altura!", controller: _heightController),
-          buildTextResult(),
-          buildCalculateButton(),
-        ],
-      ),
-    );
-  }
-
-  void calculateImc() {
-    double weight = double.parse(_weightController.text);
-    double height = double.parse(_heightController.text) / 100.0;
-    double imc = weight / (height * height);
-
-    setState(() {
-      _result = "IMC = ${imc.toStringAsPrecision(2)}\n";
-      if (imc < 18.6)
-        _result += "Abaixo do peso";
-      else if (imc < 25.0)
-        _result += "Peso ideal";
-      else if (imc < 30.0)
-        _result += "Levemente acima do peso";
-      else if (imc < 35.0)
-        _result += "Obesidade Grau I";
-      else if (imc < 40.0)
-        _result += "Obesidade Grau II";
-      else
-        _result += "Obesidade Grau IIII";
-    });
-  }
-
-  Widget buildCalculateButton() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 36.0),
-      child: RaisedButton(
-        onPressed: () {
-          if (_formKey.currentState.validate()) {
-            calculateImc();
-          }
-        },
-        child: Text('CALCULAR', style: TextStyle(color: Colors.white)),
-      ),
-    );
-  }
-
-  Widget buildTextResult() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 36.0),
-      child: Text(
-        _result,
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
-
-  Widget buildTextFormField({TextEditingController controller, String error, String label}) {
-    return TextFormField(
-      keyboardType: TextInputType.number,
-      decoration: InputDecoration(labelText: label),
-      controller: controller,
-      validator: (text) {
-        return text.isEmpty ? error : null;
-      },
-    );
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "CALCULADORA DE IMC",
+            style: TextStyle(fontFamily: "Segoe UI"),
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.green,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.refresh),
+              onPressed: _resetFilds,
+            )
+          ],
+        ),
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+            // para a tela rolar
+            padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Icon(
+                    Icons.person,
+                    size: 120.0,
+                    color: Colors.green,
+                  ),
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    decoration: InputDecoration(
+                        labelText: "Peso (Kg)",
+                        labelStyle: TextStyle(
+                          color: Colors.green,
+                          fontFamily: "Segoe UI",
+                        )),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontSize: 25.0,
+                      fontFamily: "Segoe UI",
+                    ),
+                    controller: controlarPeso,
+                    validator: (value) {
+                      return "Insira seu Peso!";
+                    },
+                  ),
+                  TextFormField(
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: "Altura (cm)",
+                        labelStyle: TextStyle(
+                          color: Colors.green,
+                          fontFamily: "Segoe UI",
+                        ),
+                      ),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.green, fontSize: 25.0, fontFamily: "Segoe UI"),
+                      controller: controlarAltura,
+                      validator: (value) {
+                        return "Insira sua Altura!";
+                      }),
+                  Padding(
+                    padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                    child: Container(
+                      height: 50.0,
+                      child: RaisedButton(
+                        onPressed: () {
+                          calculate();
+                        },
+                        color: Colors.green,
+                        child: Text(
+                          "Calcular",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 25.0,
+                            fontFamily: "Segoe UI",
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Text(_info,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 25.0,
+                        fontFamily: "Segoe UI",
+                      ))
+                ],
+              ),
+            )));
   }
 }
